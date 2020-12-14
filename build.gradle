@@ -39,6 +39,7 @@ test {
 }
 
 dependencies {
+    testImplementation "org.aspectj:aspectjweaver:1.9.6"
     testImplementation "com.codeborne:selenide:${selenideVersion}"
     testImplementation "io.qameta.allure:allure-selenide:${allureVersion}"
     testImplementation "com.github.javafaker:javafaker:1.0.2"

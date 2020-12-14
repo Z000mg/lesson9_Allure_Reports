@@ -1,8 +1,14 @@
+package tests;
+
 import com.codeborne.selenide.Configuration;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
+import io.qameta.allure.Step;
+import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -11,6 +17,8 @@ import java.util.Locale;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.*;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.logevents.SelenideLogger.addListener;
+import static helpers.AttachmentsHelper.*;
 import static io.qameta.allure.Allure.step;
 
 public class FillFormTests {
@@ -18,11 +26,13 @@ public class FillFormTests {
 
     @BeforeAll
     static void setup(){
+        addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
         Configuration.startMaximized = true;
     }
 
     @Test
-    void lesson2Form() {
+    @DisplayName("Fill Form Check")
+    void fillFormCheck() {
 
         Faker faker = new Faker();
         FakeValuesService fakeValuesService = new FakeValuesService(
@@ -33,12 +43,12 @@ public class FillFormTests {
         String userNumber = fakeValuesService.regexify("[0-9]{10}");
         String currentAddress = faker.address().fullAddress();
 
-        step("Открываем форму для ввода", () -> {
+        step("Open Fill Form", () -> {
             open ("https://demoqa.com/automation-practice-form");
             $("html").shouldHave(text("Student Registration Form"));
         });
 
-        step("Заполняем поля для ввода", () -> {
+        step("Input Form", () -> {
             $("#firstName").val(firstName);
             $("#lastName").val(lastName);
             $("#userEmail").val(userEmail);
@@ -59,15 +69,16 @@ public class FillFormTests {
             $(byText("Delhi")).click();
         });
 
-        step("Загружаем файл", () -> {
+        step("Upload File", () -> {
             $("#uploadPicture").uploadFile(file);
         });
 
-        step("Submit", () ->{
+        step("Submit", () -> {
             $("#submit").click();
         });
 
-        step("Проверяем заполненную форму", () -> {
+
+        step("Verify Filled Form", () -> {
             $("body").shouldHave(text("Thanks for submitting the form"));
             $("tbody").$(byText("Student Name")).parent().shouldHave(text(firstName + " " + lastName));
             $("tbody").$(byText("Student Email")).parent().shouldHave(text(userEmail));
@@ -80,5 +91,16 @@ public class FillFormTests {
             $("tbody").$(byText("Address")).parent().shouldHave(text(currentAddress));
             $("tbody").$(byText("State and City")).parent().shouldHave(text("NCR Delhi"));
         });
+    }
+
+    @AfterEach
+    @Step("Attachments")
+    public void afterEach() {
+        attachScreenshot("Last screenshot");
+        attachPageSource();
+        attachAsText("Browser console logs", getConsoleLogs());
+        //  attachVideo();
+
+        closeWebDriver();
     }
 }
