@@ -99,7 +99,7 @@ public class FillFormTests {
         attachScreenshot("Last screenshot");
         attachPageSource();
         attachAsText("Browser console logs", getConsoleLogs());
-        //  attachVideo();
+        //attachVideo();
 
         closeWebDriver();
     }
