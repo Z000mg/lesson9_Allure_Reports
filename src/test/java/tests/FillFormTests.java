@@ -24,6 +24,7 @@ import static io.qameta.allure.Allure.step;
 
 public class FillFormTests {
     File file = new File("src/test/resources/1.jpg");
+    //    File file = new File(".idea/.gitignore");
 
     @BeforeAll
     static void setup(){
@@ -95,6 +96,7 @@ public class FillFormTests {
             $("tbody").$(byText("Date of Birth")).parent().shouldHave(text("07 July,1973"));
             $("tbody").$(byText("Hobbies")).parent().shouldHave(text("Sports, Music"));
             $("tbody").$(byText("Picture")).parent().shouldHave(text("1.jpg"));
+        //    $("tbody").$(byText("Picture")).parent().shouldHave(text("gitignore"));
             $("tbody").$(byText("Address")).parent().shouldHave(text(currentAddress));
             $("tbody").$(byText("State and City")).parent().shouldHave(text("NCR Delhi"));
         });
