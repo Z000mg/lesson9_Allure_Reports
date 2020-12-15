@@ -23,7 +23,7 @@ import static helpers.AttachmentsHelper.*;
 import static io.qameta.allure.Allure.step;
 
 public class FillFormTests {
-    File file = new File("resources/1.jpg");
+    File file = new File("src/test/resources/1.jpg");
 
     @BeforeAll
     static void setup(){
