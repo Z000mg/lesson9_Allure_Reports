@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.io.File;
 import java.util.Locale;
@@ -27,8 +28,14 @@ public class FillFormTests {
     @BeforeAll
     static void setup(){
         addListener("AllureSelenide", new AllureSelenide().screenshots(true).savePageSource(true));
-        Configuration.startMaximized = true;
+
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("enableVNC", true);
+        capabilities.setCapability("enableVideo", true);
+
+        Configuration.browserCapabilities = capabilities;
         Configuration.remote = "https://user1:1234@selenoid.autotests.cloud:4444/wd/hub/";
+        Configuration.startMaximized = true;
     }
 
     @Test
@@ -69,26 +76,24 @@ public class FillFormTests {
             $("#stateCity-wrapper").$(byText("Select City")).click();
             $(byText("Delhi")).click();
         });
-
+/*
         step("Upload File", () -> {
             $("#uploadPicture").uploadFile(file);
         });
-
+*/
         step("Submit", () -> {
             $("#submit").click();
         });
-
 
         step("Verify Filled Form", () -> {
             $("body").shouldHave(text("Thanks for submitting the form"));
             $("tbody").$(byText("Student Name")).parent().shouldHave(text(firstName + " " + lastName));
             $("tbody").$(byText("Student Email")).parent().shouldHave(text(userEmail));
             $("tbody").$(byText("Gender")).parent().shouldHave(text("Male"));
-
             $("tbody").$(byText("Mobile")).parent().shouldHave(text(userNumber));
             $("tbody").$(byText("Date of Birth")).parent().shouldHave(text("07 July,1973"));
             $("tbody").$(byText("Hobbies")).parent().shouldHave(text("Sports, Music"));
-            $("tbody").$(byText("Picture")).parent().shouldHave(text("1.jpg"));
+      //      $("tbody").$(byText("Picture")).parent().shouldHave(text("1.jpg"));
             $("tbody").$(byText("Address")).parent().shouldHave(text(currentAddress));
             $("tbody").$(byText("State and City")).parent().shouldHave(text("NCR Delhi"));
         });
@@ -100,8 +105,7 @@ public class FillFormTests {
         attachScreenshot("Last screenshot");
         attachPageSource();
         attachAsText("Browser console logs", getConsoleLogs());
-        //attachVideo();
-
+        attachVideo();
         closeWebDriver();
     }
 }
