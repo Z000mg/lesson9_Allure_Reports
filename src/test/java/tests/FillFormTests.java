@@ -107,6 +107,6 @@ public class FillFormTests {
         attachPageSource();
         attachAsText("Browser console logs", getConsoleLogs());
         attachVideo();
-        closeWebDriver();
+        //closeWebDriver();
     }
 }
